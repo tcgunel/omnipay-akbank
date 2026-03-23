@@ -14,58 +14,58 @@ use Omnipay\Common\Exception\InvalidRequestException;
  */
 class VoidRequest extends RemoteAbstractRequest
 {
-	use PurchaseGettersSetters;
+    use PurchaseGettersSetters;
 
-	/**
-	 * @throws InvalidRequestException
-	 */
-	public function getData(): array
-	{
-		$this->validateAll();
+    /**
+     * @throws InvalidRequestException
+     */
+    public function getData(): array
+    {
+        $this->validateAll();
 
-		$randomNumber = Helper::generateRandomNumber();
-		$requestDateTime = Helper::getRequestDateTime();
+        $randomNumber = Helper::generateRandomNumber();
+        $requestDateTime = Helper::getRequestDateTime();
 
-		return [
-			'terminal'    => [
-				'merchantSafeId' => $this->getMerchantSafeId(),
-				'terminalSafeId' => $this->getTerminalSafeId(),
-			],
-			'version'          => $this->version,
-			'txnCode'          => TxnCode::CANCEL,
-			'requestDateTime'  => $requestDateTime,
-			'randomNumber'     => $randomNumber,
-			'order'            => [
-				'orderId' => $this->getTransactionId(),
-			],
-			'customer'         => [
-				'ipAddress' => $this->getClientIp() ?? '127.0.0.1',
-			],
-		];
-	}
+        return [
+            'terminal' => [
+                'merchantSafeId' => $this->getMerchantSafeId(),
+                'terminalSafeId' => $this->getTerminalSafeId(),
+            ],
+            'version' => $this->version,
+            'txnCode' => TxnCode::CANCEL,
+            'requestDateTime' => $requestDateTime,
+            'randomNumber' => $randomNumber,
+            'order' => [
+                'orderId' => $this->getTransactionId(),
+            ],
+            'customer' => [
+                'ipAddress' => $this->getClientIp() ?? '127.0.0.1',
+            ],
+        ];
+    }
 
-	/**
-	 * @throws InvalidRequestException
-	 */
-	protected function validateAll(): void
-	{
-		$this->validateSettings();
+    /**
+     * @throws InvalidRequestException
+     */
+    protected function validateAll(): void
+    {
+        $this->validateSettings();
 
-		$this->validate('transactionId');
-	}
+        $this->validate('transactionId');
+    }
 
-	/**
-	 * @param array $data
-	 */
-	public function sendData($data)
-	{
-		$httpResponse = $this->sendJsonRequest($data);
+    /**
+     * @param array $data
+     */
+    public function sendData($data)
+    {
+        $httpResponse = $this->sendJsonRequest($data);
 
-		return $this->createResponse($httpResponse);
-	}
+        return $this->createResponse($httpResponse);
+    }
 
-	protected function createResponse($data): VoidResponse
-	{
-		return $this->response = new VoidResponse($this, $data);
-	}
+    protected function createResponse($data): VoidResponse
+    {
+        return $this->response = new VoidResponse($this, $data);
+    }
 }

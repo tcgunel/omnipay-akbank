@@ -15,90 +15,90 @@ use Omnipay\Akbank\Traits\PurchaseGettersSetters;
  */
 class CompletePurchaseRequest extends RemoteAbstractRequest
 {
-	use PurchaseGettersSetters;
+    use PurchaseGettersSetters;
 
-	/**
-	 * @throws \Omnipay\Common\Exception\InvalidRequestException
-	 */
-	public function getData(): array
-	{
-		$this->validateAll();
+    /**
+     * @throws \Omnipay\Common\Exception\InvalidRequestException
+     */
+    public function getData(): array
+    {
+        $this->validateAll();
 
-		$randomNumber = Helper::generateRandomNumber();
-		$requestDateTime = Helper::getRequestDateTime();
+        $randomNumber = Helper::generateRandomNumber();
+        $requestDateTime = Helper::getRequestDateTime();
 
-		return [
-			'terminal'    => [
-				'merchantSafeId' => $this->getMerchantSafeId(),
-				'terminalSafeId' => $this->getTerminalSafeId(),
-			],
-			'version'          => $this->version,
-			'txnCode'          => TxnCode::SALE,
-			'requestDateTime'  => $requestDateTime,
-			'randomNumber'     => $randomNumber,
-			'order'            => [
-				'orderId' => $this->getTransactionId(),
-			],
-			'transaction'      => [
-				'amount'       => Helper::formatAmount($this->getAmount()),
-				'currencyCode' => Helper::getCurrencyCode($this->getCurrency() ?? 'TRY'),
-				'installCount' => (int) ($this->getInstallment() ?? 1),
-			],
-			'customer'         => [
-				'ipAddress' => $this->getClientIp() ?? '127.0.0.1',
-			],
-			'secureTransaction' => [
-				'secureId'     => $this->getSecureId(),
-				'secureEcomInd' => $this->getSecureEcomInd(),
-				'secureData'   => $this->getSecureData(),
-				'secureMd'     => $this->getSecureMd(),
-			],
-		];
-	}
+        return [
+            'terminal' => [
+                'merchantSafeId' => $this->getMerchantSafeId(),
+                'terminalSafeId' => $this->getTerminalSafeId(),
+            ],
+            'version' => $this->version,
+            'txnCode' => TxnCode::SALE,
+            'requestDateTime' => $requestDateTime,
+            'randomNumber' => $randomNumber,
+            'order' => [
+                'orderId' => $this->getTransactionId(),
+            ],
+            'transaction' => [
+                'amount' => Helper::formatAmount($this->getAmount()),
+                'currencyCode' => Helper::getCurrencyCode($this->getCurrency() ?? 'TRY'),
+                'installCount' => (int) ($this->getInstallment() ?? 1),
+            ],
+            'customer' => [
+                'ipAddress' => $this->getClientIp() ?? '127.0.0.1',
+            ],
+            'secureTransaction' => [
+                'secureId' => $this->getSecureId(),
+                'secureEcomInd' => $this->getSecureEcomInd(),
+                'secureData' => $this->getSecureData(),
+                'secureMd' => $this->getSecureMd(),
+            ],
+        ];
+    }
 
-	/**
-	 * @throws \Omnipay\Common\Exception\InvalidRequestException
-	 */
-	protected function validateAll(): void
-	{
-		$this->validateSettings();
+    /**
+     * @throws \Omnipay\Common\Exception\InvalidRequestException
+     */
+    protected function validateAll(): void
+    {
+        $this->validateSettings();
 
-		$this->validate(
-			'transactionId',
-			'amount',
-			'responseCode',
-			'mdStatus',
-			'secureId',
-			'secureEcomInd',
-			'secureData',
-			'secureMd',
-		);
+        $this->validate(
+            'transactionId',
+            'amount',
+            'responseCode',
+            'mdStatus',
+            'secureId',
+            'secureEcomInd',
+            'secureData',
+            'secureMd',
+        );
 
-		if ($this->getResponseCode() !== ResponseCode::SUCCESS) {
-			throw new \Omnipay\Common\Exception\InvalidRequestException(
-				'3D authentication failed: ' . ($this->getResponseMessage() ?? 'Unknown error')
-			);
-		}
+        if ($this->getResponseCode() !== ResponseCode::SUCCESS) {
+            throw new \Omnipay\Common\Exception\InvalidRequestException(
+                '3D authentication failed: ' . ($this->getResponseMessage() ?? 'Unknown error')
+            );
+        }
 
-		if ($this->getMdStatus() !== '1') {
-			throw new \Omnipay\Common\Exception\InvalidRequestException(
-				'3D mdStatus is not 1. mdStatus: ' . $this->getMdStatus()
-			);
-		}
-	}
+        if ($this->getMdStatus() !== '1') {
+            throw new \Omnipay\Common\Exception\InvalidRequestException(
+                '3D mdStatus is not 1. mdStatus: ' . $this->getMdStatus()
+            );
+        }
+    }
 
-	/**
-	 * @param array $data
-	 */
-	public function sendData($data)
-	{
-		$httpResponse = $this->sendJsonRequest($data);
+    /**
+     * @param array $data
+     */
+    public function sendData($data)
+    {
+        $httpResponse = $this->sendJsonRequest($data);
 
-		return $this->createResponse($httpResponse);
-	}
+        return $this->createResponse($httpResponse);
+    }
 
-	protected function createResponse($data): CompletePurchaseResponse
-	{
-		return $this->response = new CompletePurchaseResponse($this, $data);
-	}
+    protected function createResponse($data): CompletePurchaseResponse
+    {
+        return $this->response = new CompletePurchaseResponse($this, $data);
+    }
 }

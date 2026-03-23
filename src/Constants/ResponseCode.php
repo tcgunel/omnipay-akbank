@@ -4,5 +4,5 @@ namespace Omnipay\Akbank\Constants;
 
 class ResponseCode
 {
-	public const SUCCESS = 'VPS-0000';
+    public const SUCCESS = 'VPS-0000';
 }

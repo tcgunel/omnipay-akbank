@@ -13,76 +13,76 @@ use Psr\Http\Message\ResponseInterface;
  */
 class CompletePurchaseResponse extends AbstractResponse
 {
-	protected $response;
+    protected $response;
 
-	protected $request;
+    protected $request;
 
-	public function __construct(RequestInterface $request, $data)
-	{
-		parent::__construct($request, $data);
+    public function __construct(RequestInterface $request, $data)
+    {
+        parent::__construct($request, $data);
 
-		$this->request = $request;
-		$this->response = $data;
+        $this->request = $request;
+        $this->response = $data;
 
-		if ($data instanceof ResponseInterface) {
-			$body = (string) $data->getBody();
+        if ($data instanceof ResponseInterface) {
+            $body = (string) $data->getBody();
 
-			try {
-				$this->response = json_decode($body, true, 512, JSON_THROW_ON_ERROR);
-			} catch (JsonException $e) {
-				$this->response = [
-					'responseCode'    => 'ERROR',
-					'responseMessage' => $body,
-				];
-			}
-		}
-	}
+            try {
+                $this->response = json_decode($body, true, 512, JSON_THROW_ON_ERROR);
+            } catch (JsonException $e) {
+                $this->response = [
+                    'responseCode' => 'ERROR',
+                    'responseMessage' => $body,
+                ];
+            }
+        }
+    }
 
-	public function isSuccessful(): bool
-	{
-		return isset($this->response['responseCode'])
-			&& $this->response['responseCode'] === ResponseCode::SUCCESS;
-	}
+    public function isSuccessful(): bool
+    {
+        return isset($this->response['responseCode'])
+            && $this->response['responseCode'] === ResponseCode::SUCCESS;
+    }
 
-	public function getTransactionReference(): ?string
-	{
-		if (is_array($this->response) && isset($this->response['transaction']['authCode'])) {
-			return $this->response['transaction']['authCode'];
-		}
+    public function getTransactionReference(): ?string
+    {
+        if (is_array($this->response) && isset($this->response['transaction']['authCode'])) {
+            return $this->response['transaction']['authCode'];
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	public function getMessage(): ?string
-	{
-		if (is_array($this->response) && isset($this->response['responseMessage'])) {
-			return $this->response['responseMessage'];
-		}
+    public function getMessage(): ?string
+    {
+        if (is_array($this->response) && isset($this->response['responseMessage'])) {
+            return $this->response['responseMessage'];
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	public function getCode(): ?string
-	{
-		if (is_array($this->response) && isset($this->response['responseCode'])) {
-			return $this->response['responseCode'];
-		}
+    public function getCode(): ?string
+    {
+        if (is_array($this->response) && isset($this->response['responseCode'])) {
+            return $this->response['responseCode'];
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	public function getData()
-	{
-		return $this->response;
-	}
+    public function getData()
+    {
+        return $this->response;
+    }
 
-	public function getRedirectData()
-	{
-		return null;
-	}
+    public function getRedirectData()
+    {
+        return null;
+    }
 
-	public function getRedirectUrl(): string
-	{
-		return '';
-	}
+    public function getRedirectUrl(): string
+    {
+        return '';
+    }
 }

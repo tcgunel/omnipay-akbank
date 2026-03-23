@@ -1,0 +1,51 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Expression on left side of \\?\\? is not nullable\\.$#"
+			count: 2
+			path: src/Message/CompletePurchaseRequest.php
+
+		-
+			message: "#^Method Omnipay\\\\Akbank\\\\Message\\\\CompletePurchaseResponse\\:\\:getRedirectData\\(\\) should return array but returns null\\.$#"
+			count: 1
+			path: src/Message/CompletePurchaseResponse.php
+
+		-
+			message: "#^Expression on left side of \\?\\? is not nullable\\.$#"
+			count: 3
+			path: src/Message/PurchaseRequest.php
+
+		-
+			message: "#^Method Omnipay\\\\Akbank\\\\Message\\\\PurchaseResponse\\:\\:getRedirectUrl\\(\\) should return string but returns null\\.$#"
+			count: 1
+			path: src/Message/PurchaseResponse.php
+
+		-
+			message: "#^Property Omnipay\\\\Akbank\\\\Message\\\\PurchaseResponse\\:\\:\\$request \\(Omnipay\\\\Akbank\\\\Message\\\\PurchaseRequest\\) does not accept Omnipay\\\\Common\\\\Message\\\\RequestInterface\\.$#"
+			count: 1
+			path: src/Message/PurchaseResponse.php
+
+		-
+			message: "#^Expression on left side of \\?\\? is not nullable\\.$#"
+			count: 2
+			path: src/Message/RefundRequest.php
+
+		-
+			message: "#^Method Omnipay\\\\Akbank\\\\Message\\\\RefundResponse\\:\\:getRedirectData\\(\\) should return array but returns null\\.$#"
+			count: 1
+			path: src/Message/RefundResponse.php
+
+		-
+			message: "#^Ternary operator condition is always true\\.$#"
+			count: 1
+			path: src/Message/RemoteAbstractRequest.php
+
+		-
+			message: "#^Expression on left side of \\?\\? is not nullable\\.$#"
+			count: 1
+			path: src/Message/VoidRequest.php
+
+		-
+			message: "#^Method Omnipay\\\\Akbank\\\\Message\\\\VoidResponse\\:\\:getRedirectData\\(\\) should return array but returns null\\.$#"
+			count: 1
+			path: src/Message/VoidResponse.php

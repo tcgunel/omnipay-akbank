@@ -26,42 +26,42 @@ use Omnipay\Common\Message\AbstractRequest;
  */
 class Gateway extends AbstractGateway
 {
-	use PurchaseGettersSetters;
+    use PurchaseGettersSetters;
 
-	public function getName(): string
-	{
-		return 'Akbank';
-	}
+    public function getName(): string
+    {
+        return 'Akbank';
+    }
 
-	public function getDefaultParameters()
-	{
-		return [
-			'clientIp'        => '127.0.0.1',
-			'merchantSafeId'  => '',
-			'terminalSafeId'  => '',
-			'secretKey'       => '',
-			'installment'     => 1,
-			'secure'          => false,
-		];
-	}
+    public function getDefaultParameters()
+    {
+        return [
+            'clientIp' => '127.0.0.1',
+            'merchantSafeId' => '',
+            'terminalSafeId' => '',
+            'secretKey' => '',
+            'installment' => 1,
+            'secure' => false,
+        ];
+    }
 
-	public function purchase(array $options = []): AbstractRequest
-	{
-		return $this->createRequest(PurchaseRequest::class, $options);
-	}
+    public function purchase(array $options = []): AbstractRequest
+    {
+        return $this->createRequest(PurchaseRequest::class, $options);
+    }
 
-	public function completePurchase(array $options = []): AbstractRequest
-	{
-		return $this->createRequest(CompletePurchaseRequest::class, $options);
-	}
+    public function completePurchase(array $options = []): AbstractRequest
+    {
+        return $this->createRequest(CompletePurchaseRequest::class, $options);
+    }
 
-	public function void(array $options = []): AbstractRequest
-	{
-		return $this->createRequest(VoidRequest::class, $options);
-	}
+    public function void(array $options = []): AbstractRequest
+    {
+        return $this->createRequest(VoidRequest::class, $options);
+    }
 
-	public function refund(array $options = []): AbstractRequest
-	{
-		return $this->createRequest(RefundRequest::class, $options);
-	}
+    public function refund(array $options = []): AbstractRequest
+    {
+        return $this->createRequest(RefundRequest::class, $options);
+    }
 }
