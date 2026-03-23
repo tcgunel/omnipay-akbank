@@ -1,0 +1,28 @@
+{
+	"merchantSafeId": "2023090417500272654BD9A49CF07574",
+	"terminalSafeId": "2023090417500284007BD9A49CF0BC58",
+	"secretKey": "3230323330393034313735303032363031353172675f357637355f73686172656432303233303930343137353030323634",
+
+	"transactionId": "TEST-ORDER-001",
+	"amount": "1.00",
+	"currency": "TRY",
+	"card": {
+		"firstName": "Example",
+		"lastName": "User",
+		"number": "5218076007402834",
+		"expiryMonth": "12",
+		"expiryYear": "2030",
+		"cvv": "000",
+		"billingAddress1": "123 Billing St",
+		"billingAddress2": "Billsville",
+		"billingCity": "Istanbul",
+		"billingPostcode": "34000",
+		"billingState": "IST",
+		"billingCountry": "TR",
+		"billingPhone": "5554443322"
+	},
+	"clientIp": "127.0.0.1",
+	"secure": false,
+	"installment": 1,
+	"testMode": true
+}

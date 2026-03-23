@@ -1,0 +1,6 @@
+HTTP/1.1 200 OK
+Server: nginx
+Content-Type: application/json
+Content-Length: 300
+
+{"responseCode":"VPS-0000","responseMessage":"SUCCESSFUL","txnCode":"1000","terminal":{"merchantSafeId":"2023090417500272654BD9A49CF07574","terminalSafeId":"2023090417500284007BD9A49CF0BC58"},"order":{"orderId":"TEST-ORDER-3D-001"},"transaction":{"authCode":"P99887","amount":"10.50","currencyCode":949},"campaign":{}}
