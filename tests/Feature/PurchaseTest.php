@@ -230,29 +230,29 @@ class PurchaseTest extends TestCase
     {
         $request = new PurchaseRequest($this->getHttpClient(), $this->getHttpRequest());
         $request->initialize([
-            'merchantSafeId'  => '2023090417500272654BD9A49CF07574',
-            'terminalSafeId'  => '2023090417500284633D137A249DBBEB',
-            'secretKey'       => self::TEST_SECRET_KEY,
-            'paymentModel'    => PaymentModel::THREE_D_PAY,
-            'secure'          => true,
-            'transactionId'   => 'd7242a5a-0fc8-41b4-a9be-2a3b50390114',
-            'lang'            => 'TR',
-            'emailAddress'    => 'test@akbank.com',
-            'amount'          => '11.00',
-            'currency'        => 'TRY',
-            'installment'     => 1,
-            'returnUrl'       => 'https://sanalposteststore-prep.akbank.com/merchantOkUrl',
-            'cancelUrl'       => 'https://sanalposteststore-prep.akbank.com/merchantFailUrl',
-            'card'            => [
-                'number'      => '5578293000121055',
+            'merchantSafeId' => '2023090417500272654BD9A49CF07574',
+            'terminalSafeId' => '2023090417500284633D137A249DBBEB',
+            'secretKey' => self::TEST_SECRET_KEY,
+            'paymentModel' => PaymentModel::THREE_D_PAY,
+            'secure' => true,
+            'transactionId' => 'd7242a5a-0fc8-41b4-a9be-2a3b50390114',
+            'lang' => 'TR',
+            'emailAddress' => 'test@akbank.com',
+            'amount' => '11.00',
+            'currency' => 'TRY',
+            'installment' => 1,
+            'returnUrl' => 'https://sanalposteststore-prep.akbank.com/merchantOkUrl',
+            'cancelUrl' => 'https://sanalposteststore-prep.akbank.com/merchantFailUrl',
+            'card' => [
+                'number' => '5578293000121055',
                 'expiryMonth' => '11',
-                'expiryYear'  => '2040',
-                'cvv'         => '238',
+                'expiryYear' => '2040',
+                'cvv' => '238',
             ],
             // Fixed so the generated hash is deterministic.
-            'randomNumber'    => '2f0b254415d70f0daf9ed4660e69a7ca9734644313ab7545f30d1f6c91185db7e54c141a3c7595115989e9419738e54ce04f81f9a590916c8d32cc113485dc60',
+            'randomNumber' => '2f0b254415d70f0daf9ed4660e69a7ca9734644313ab7545f30d1f6c91185db7e54c141a3c7595115989e9419738e54ce04f81f9a590916c8d32cc113485dc60',
             'requestDateTime' => '2026-06-02T10:42:29.217',
-            'testMode'        => true,
+            'testMode' => true,
         ]);
 
         $data = $request->getData();
@@ -273,22 +273,22 @@ class PurchaseTest extends TestCase
     {
         $request = new PurchaseRequest($this->getHttpClient(), $this->getHttpRequest());
         $request->initialize([
-            'merchantSafeId'  => '2023090417500272654BD9A49CF07574',
-            'terminalSafeId'  => '2023090417500284633D137A249DBBEB',
-            'secretKey'       => self::TEST_SECRET_KEY,
-            'paymentModel'    => PaymentModel::THREE_D_PAY_HOSTING,
-            'secure'          => true,
-            'transactionId'   => 'd7242a5a-0fc8-41b4-a9be-2a3b50390114',
-            'lang'            => 'TR',
-            'emailAddress'    => 'test@akbank.com',
-            'amount'          => '11.00',
-            'currency'        => 'TRY',
-            'installment'     => 1,
-            'returnUrl'       => 'https://sanalposteststore-prep.akbank.com/merchantOkUrl',
-            'cancelUrl'       => 'https://sanalposteststore-prep.akbank.com/merchantFailUrl',
-            'randomNumber'    => 'a2e4ef22cac5758eec1777e18ea7ad0e57bd743e3f7a6bc1967ca0a773f9ef616315b6e480385942e72818b8d994675d38035bbd6957fe646c3259c587ecbb9a',
+            'merchantSafeId' => '2023090417500272654BD9A49CF07574',
+            'terminalSafeId' => '2023090417500284633D137A249DBBEB',
+            'secretKey' => self::TEST_SECRET_KEY,
+            'paymentModel' => PaymentModel::THREE_D_PAY_HOSTING,
+            'secure' => true,
+            'transactionId' => 'd7242a5a-0fc8-41b4-a9be-2a3b50390114',
+            'lang' => 'TR',
+            'emailAddress' => 'test@akbank.com',
+            'amount' => '11.00',
+            'currency' => 'TRY',
+            'installment' => 1,
+            'returnUrl' => 'https://sanalposteststore-prep.akbank.com/merchantOkUrl',
+            'cancelUrl' => 'https://sanalposteststore-prep.akbank.com/merchantFailUrl',
+            'randomNumber' => 'a2e4ef22cac5758eec1777e18ea7ad0e57bd743e3f7a6bc1967ca0a773f9ef616315b6e480385942e72818b8d994675d38035bbd6957fe646c3259c587ecbb9a',
             'requestDateTime' => '2026-06-02T10:43:16.489',
-            'testMode'        => true,
+            'testMode' => true,
         ]);
 
         $data = $request->getData();
@@ -314,15 +314,15 @@ class PurchaseTest extends TestCase
         $request->initialize([
             'merchantSafeId' => 'M',
             'terminalSafeId' => 'T',
-            'secretKey'      => self::TEST_SECRET_KEY,
-            'paymentModel'   => PaymentModel::THREE_D_PAY_HOSTING,
-            'secure'         => true,
-            'transactionId'  => 'ORDER-HOSTED-1',
-            'amount'         => '10.00',
-            'currency'       => 'TRY',
-            'returnUrl'      => 'https://example.com/ok',
-            'cancelUrl'      => 'https://example.com/fail',
-            'testMode'       => true,
+            'secretKey' => self::TEST_SECRET_KEY,
+            'paymentModel' => PaymentModel::THREE_D_PAY_HOSTING,
+            'secure' => true,
+            'transactionId' => 'ORDER-HOSTED-1',
+            'amount' => '10.00',
+            'currency' => 'TRY',
+            'returnUrl' => 'https://example.com/ok',
+            'cancelUrl' => 'https://example.com/fail',
+            'testMode' => true,
         ]);
 
         // Must not throw despite no card.
@@ -361,9 +361,9 @@ class PurchaseTest extends TestCase
     public function test_verify_response_hash()
     {
         $post = [
-            'hashParams'      => 'txnCode+responseCode+responseMessage',
-            'txnCode'         => '3000',
-            'responseCode'    => 'VPS-0000',
+            'hashParams' => 'txnCode+responseCode+responseMessage',
+            'txnCode' => '3000',
+            'responseCode' => 'VPS-0000',
             'responseMessage' => 'SUCCESSFUL',
         ];
         $post['hash'] = Helper::hash('3000VPS-0000SUCCESSFUL', self::TEST_SECRET_KEY);

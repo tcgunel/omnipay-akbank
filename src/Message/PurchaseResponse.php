@@ -111,10 +111,10 @@ class PurchaseResponse extends AbstractResponse implements RedirectResponseInter
 
         $html = sprintf(
             '<!DOCTYPE html><html lang="tr"><head><meta charset="utf-8"><title>%s</title></head>'
-            .'<body onload="document.forms[0].submit();">'
-            .'<form action="%s" method="post" target="_top">%s'
-            .'<noscript><input type="submit" value="Continue" /></noscript>'
-            .'</form></body></html>',
+            . '<body onload="document.forms[0].submit();">'
+            . '<form action="%s" method="post" target="_top">%s'
+            . '<noscript><input type="submit" value="Continue" /></noscript>'
+            . '</form></body></html>',
             'Yönlendiriliyor...',
             htmlspecialchars($url, ENT_QUOTES),
             $inputs,
