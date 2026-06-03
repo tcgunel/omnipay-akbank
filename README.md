@@ -92,6 +92,45 @@ if ($response->isRedirect()) {
 }
 ```
 
+The redirect form is rendered with `target="_top"` so the bank's 3D Secure page escapes any
+iframe the merchant renders it in (Akbank's 3DS page sends `X-Frame-Options: DENY`).
+
+### 3D Pay Hosting (bank-hosted card page)
+
+Opt in per request by setting the payment model. In this model the card is collected on Akbank's
+own page, so **no card data is sent** and there is **no `completePurchase` step** — the bank posts
+the final result to your `returnUrl`:
+
+```php
+use Omnipay\Akbank\Constants\PaymentModel;
+
+$response = $gateway->purchase([
+    'amount'        => '100.00',
+    'currency'      => 'TRY',
+    'transactionId' => 'ORDER-001',
+    'installment'   => 1,
+    'secure'        => true,
+    'paymentModel'  => PaymentModel::THREE_D_PAY_HOSTING,
+    'emailAddress'  => 'customer@example.com',
+    'returnUrl'     => 'https://example.com/payment/success',
+    'cancelUrl'     => 'https://example.com/payment/failure',
+])->send();
+
+if ($response->isRedirect()) {
+    $response->redirect(); // Redirects to bank's hosted payment page
+}
+```
+
+On the callback, verify the bank's signature and read the final `responseCode` directly:
+
+```php
+use Omnipay\Akbank\Helpers\Helper;
+
+if (Helper::verifyResponseHash($_POST, 'your-secret-key') && $_POST['responseCode'] === 'VPS-0000') {
+    // payment successful
+}
+```
+
 ### Complete 3D Purchase (Callback Handler)
 
 After the bank redirects back to your `returnUrl`, complete the purchase:

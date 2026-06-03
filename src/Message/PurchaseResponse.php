@@ -85,6 +85,44 @@ class PurchaseResponse extends AbstractResponse implements RedirectResponseInter
         return is_array($this->response) ? $this->response : [];
     }
 
+    /**
+     * Return a self-submitting HTML form that posts the secure-payment fields to the bank.
+     *
+     * The form targets `_top` so that when the consumer renders this inside an iframe, the
+     * bank's 3D Secure challenge page (which sends X-Frame-Options: DENY) loads in the
+     * top-level window instead of being blocked. Mirrors the omnipay-kuveytturk convention.
+     */
+    public function getRedirectResponse()
+    {
+        if (!$this->isRedirect()) {
+            return new \Symfony\Component\HttpFoundation\Response('');
+        }
+
+        $url = (string) $this->getRedirectUrl();
+
+        $inputs = '';
+        foreach ($this->getRedirectData() as $key => $value) {
+            $inputs .= sprintf(
+                '<input type="hidden" name="%s" value="%s" />',
+                htmlspecialchars((string) $key, ENT_QUOTES),
+                htmlspecialchars((string) $value, ENT_QUOTES),
+            );
+        }
+
+        $html = sprintf(
+            '<!DOCTYPE html><html lang="tr"><head><meta charset="utf-8"><title>%s</title></head>'
+            .'<body onload="document.forms[0].submit();">'
+            .'<form action="%s" method="post" target="_top">%s'
+            .'<noscript><input type="submit" value="Continue" /></noscript>'
+            .'</form></body></html>',
+            'Yönlendiriliyor...',
+            htmlspecialchars($url, ENT_QUOTES),
+            $inputs,
+        );
+
+        return new \Symfony\Component\HttpFoundation\Response($html);
+    }
+
     public function getTransactionReference(): ?string
     {
         if (is_array($this->response) && isset($this->response['transaction']['authCode'])) {

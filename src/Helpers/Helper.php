@@ -22,6 +22,31 @@ class Helper
     }
 
     /**
+     * Verify the response hash on a secure (3D / 3D Pay / 3D Pay Hosting) callback (doc §6.1.1.2).
+     *
+     * The bank returns a dynamic `hashParams` (a '+'-separated list of field names) plus a `hash`.
+     * The merchant must concatenate the response values in that exact order and compare.
+     *
+     * @param array<string, mixed> $response The POST/response fields from the bank.
+     */
+    public static function verifyResponseHash(array $response, string $secretKey): bool
+    {
+        if (empty($response['hashParams']) || empty($response['hash'])) {
+            return false;
+        }
+
+        $plain = '';
+        foreach (explode('+', (string) $response['hashParams']) as $param) {
+            if ($param === '') {
+                continue;
+            }
+            $plain .= (string) ($response[$param] ?? '');
+        }
+
+        return hash_equals((string) $response['hash'], self::hash($plain, $secretKey));
+    }
+
+    /**
      * Generate 128-character random hex string for API requests.
      */
     public static function generateRandomNumber(): string

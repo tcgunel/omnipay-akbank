@@ -64,6 +64,73 @@ trait PurchaseGettersSetters
         return $this->setParameter('secure', $value);
     }
 
+    public function getPaymentModel()
+    {
+        return $this->getParameter('paymentModel');
+    }
+
+    public function setPaymentModel($value)
+    {
+        return $this->setParameter('paymentModel', $value);
+    }
+
+    public function getLang()
+    {
+        return $this->getParameter('lang');
+    }
+
+    public function setLang($value)
+    {
+        return $this->setParameter('lang', $value);
+    }
+
+    public function getEmailAddress()
+    {
+        return $this->getParameter('emailAddress');
+    }
+
+    public function setEmailAddress($value)
+    {
+        return $this->setParameter('emailAddress', $value);
+    }
+
+    public function getSubMerchantId()
+    {
+        return $this->getParameter('subMerchantId');
+    }
+
+    public function setSubMerchantId($value)
+    {
+        return $this->setParameter('subMerchantId', $value);
+    }
+
+    /**
+     * Optional override of the random number (128 hex chars). Generated when unset.
+     * Primarily here so the secure-form hash can be reproduced deterministically in tests.
+     */
+    public function getRandomNumber()
+    {
+        return $this->getParameter('randomNumber');
+    }
+
+    public function setRandomNumber($value)
+    {
+        return $this->setParameter('randomNumber', $value);
+    }
+
+    /**
+     * Optional override of the ISO request datetime. Generated when unset.
+     */
+    public function getRequestDateTime()
+    {
+        return $this->getParameter('requestDateTime');
+    }
+
+    public function setRequestDateTime($value)
+    {
+        return $this->setParameter('requestDateTime', $value);
+    }
+
     public function getOrderId()
     {
         return $this->getParameter('orderId');

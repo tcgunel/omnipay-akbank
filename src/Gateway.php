@@ -42,6 +42,8 @@ class Gateway extends AbstractGateway
             'secretKey' => '',
             'installment' => 1,
             'secure' => false,
+            'paymentModel' => \Omnipay\Akbank\Constants\PaymentModel::THREE_D,
+            'lang' => 'TR',
         ];
     }
 
