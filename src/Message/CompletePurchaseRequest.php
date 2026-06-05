@@ -42,6 +42,7 @@ class CompletePurchaseRequest extends RemoteAbstractRequest
             'transaction' => [
                 'amount' => Helper::formatAmount($this->getAmount()),
                 'currencyCode' => Helper::getCurrencyCode($this->getCurrency() ?? 'TRY'),
+                'motoInd' => 0,
                 'installCount' => (int) ($this->getInstallment() ?? 1),
             ],
             'customer' => [

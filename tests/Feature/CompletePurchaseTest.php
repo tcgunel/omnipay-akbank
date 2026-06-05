@@ -37,6 +37,7 @@ class CompletePurchaseTest extends TestCase
         // Verify transaction
         $this->assertEquals('10.50', $data['transaction']['amount']);
         $this->assertEquals(949, $data['transaction']['currencyCode']);
+        $this->assertEquals(0, $data['transaction']['motoInd']);
         $this->assertEquals(1, $data['transaction']['installCount']);
 
         // Verify customer
