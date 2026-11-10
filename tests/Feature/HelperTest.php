@@ -112,4 +112,77 @@ class HelperTest extends TestCase
         // Should contain T separator
         $this->assertStringContainsString('T', $dateTime);
     }
+
+    private function signedCallback(string $hashParams, string $secretKey, array $fields): array
+    {
+        $plain = '';
+        foreach (explode('+', $hashParams) as $param) {
+            $plain .= (string) ($fields[$param] ?? '');
+        }
+
+        return $fields + ['hashParams' => $hashParams, 'hash' => Helper::hash($plain, $secretKey)];
+    }
+
+    private function callbackFields(): array
+    {
+        return [
+            'orderId' => 'ORDER-001',
+            'amount' => '10.50',
+            'responseCode' => 'VPS-0000',
+            'mdStatus' => '1',
+            'txnCode' => '3000',
+        ];
+    }
+
+    public function test_strict_verify_passes_when_hash_covers_required_fields()
+    {
+        $response = $this->signedCallback('txnCode+orderId+amount+responseCode+mdStatus', 'secret', $this->callbackFields());
+
+        $this->assertTrue(Helper::verifyPaymentCallbackHash($response, 'secret'));
+        $this->assertTrue(Helper::verifyResponseHash($response, 'secret', Helper::PAYMENT_CALLBACK_REQUIRED_HASH_PARAMS));
+    }
+
+    public function test_strict_verify_fails_when_hash_params_omit_a_required_field()
+    {
+        // Validly signed, but amount and responseCode are not covered and can be swapped freely.
+        $response = $this->signedCallback('txnCode+orderId+mdStatus', 'secret', $this->callbackFields());
+        $response['amount'] = '0.01';
+
+        $this->assertFalse(Helper::verifyPaymentCallbackHash($response, 'secret'));
+        $this->assertFalse(Helper::verifyResponseHash($response, 'secret', ['orderId', 'amount', 'responseCode']));
+        // Legacy check still accepts it, which is the reason for the strict variant.
+        $this->assertTrue(Helper::verifyResponseHash($response, 'secret'));
+    }
+
+    public function test_strict_verify_fails_when_required_field_missing_from_response()
+    {
+        $fields = $this->callbackFields();
+        unset($fields['amount']);
+        $response = $this->signedCallback('orderId+amount+responseCode', 'secret', $fields);
+
+        $this->assertFalse(Helper::verifyPaymentCallbackHash($response, 'secret'));
+    }
+
+    public function test_verify_fails_with_empty_secret()
+    {
+        $response = $this->signedCallback('orderId+amount+responseCode', '', $this->callbackFields());
+
+        $this->assertFalse(Helper::verifyResponseHash($response, ''));
+        $this->assertFalse(Helper::verifyPaymentCallbackHash($response, ''));
+    }
+
+    public function test_legacy_verify_behaves_as_before()
+    {
+        $response = $this->signedCallback('orderId+amount+responseCode', 'secret', $this->callbackFields());
+
+        $this->assertTrue(Helper::verifyResponseHash($response, 'secret'));
+        $this->assertFalse(Helper::verifyResponseHash($response, 'wrong-secret'));
+
+        $tampered = $response;
+        $tampered['amount'] = '0.01';
+        $this->assertFalse(Helper::verifyResponseHash($tampered, 'secret'));
+
+        $this->assertFalse(Helper::verifyResponseHash(['hash' => 'x'], 'secret'));
+        $this->assertFalse(Helper::verifyResponseHash(['hashParams' => 'orderId'], 'secret'));
+    }
 }

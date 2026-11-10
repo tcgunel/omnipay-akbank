@@ -22,28 +22,60 @@ class Helper
     }
 
     /**
+     * Fields a payment callback's `hashParams` must cover for the strict check to pass.
+     *
+     * @var list<string>
+     */
+    public const PAYMENT_CALLBACK_REQUIRED_HASH_PARAMS = ['orderId', 'amount', 'responseCode'];
+
+    /**
      * Verify the response hash on a secure (3D / 3D Pay / 3D Pay Hosting) callback (doc §6.1.1.2).
      *
      * The bank returns a dynamic `hashParams` (a '+'-separated list of field names) plus a `hash`.
      * The merchant must concatenate the response values in that exact order and compare.
      *
+     * Because `hashParams` is itself part of the posted data, the sender decides which fields are
+     * signed. Pass `$requiredParams` (e.g. self::PAYMENT_CALLBACK_REQUIRED_HASH_PARAMS) to also
+     * require that each of those fields is listed in `hashParams` and present in the response;
+     * otherwise fields you rely on (orderId, amount, responseCode) may be unsigned. Without it the
+     * method behaves as before (only the hash over whatever `hashParams` lists is checked).
+     *
      * @param array<string, mixed> $response The POST/response fields from the bank.
+     * @param list<string> $requiredParams Field names that must be covered by the hash.
      */
-    public static function verifyResponseHash(array $response, string $secretKey): bool
+    public static function verifyResponseHash(array $response, string $secretKey, array $requiredParams = []): bool
     {
-        if (empty($response['hashParams']) || empty($response['hash'])) {
+        if ($secretKey === '' || empty($response['hashParams']) || empty($response['hash'])) {
             return false;
         }
 
-        $plain = '';
-        foreach (explode('+', (string) $response['hashParams']) as $param) {
-            if ($param === '') {
-                continue;
+        $params = array_values(array_filter(
+            explode('+', (string) $response['hashParams']),
+            static fn (string $param): bool => $param !== ''
+        ));
+
+        foreach ($requiredParams as $required) {
+            if (! in_array($required, $params, true) || ! array_key_exists($required, $response)) {
+                return false;
             }
+        }
+
+        $plain = '';
+        foreach ($params as $param) {
             $plain .= (string) ($response[$param] ?? '');
         }
 
-        return hash_equals((string) $response['hash'], self::hash($plain, $secretKey));
+        return hash_equals(self::hash($plain, $secretKey), (string) $response['hash']);
+    }
+
+    /**
+     * Strict callback verification: the hash must be valid and must cover orderId, amount and responseCode.
+     *
+     * @param array<string, mixed> $response The POST/response fields from the bank.
+     */
+    public static function verifyPaymentCallbackHash(array $response, string $secretKey): bool
+    {
+        return self::verifyResponseHash($response, $secretKey, self::PAYMENT_CALLBACK_REQUIRED_HASH_PARAMS);
     }
 
     /**

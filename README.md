@@ -126,10 +126,17 @@ On the callback, verify the bank's signature and read the final `responseCode` d
 ```php
 use Omnipay\Akbank\Helpers\Helper;
 
-if (Helper::verifyResponseHash($_POST, 'your-secret-key') && $_POST['responseCode'] === 'VPS-0000') {
-    // payment successful
+if (Helper::verifyPaymentCallbackHash($_POST, 'your-secret-key') && $_POST['responseCode'] === 'VPS-0000') {
+    // payment successful; still compare $_POST['orderId'] and $_POST['amount'] with your own order
 }
 ```
+
+The bank chooses which fields it signs by sending them in `hashParams`, and that list arrives in the
+same POST. `verifyPaymentCallbackHash()` only passes when `hashParams` covers `orderId`, `amount` and
+`responseCode`, so those three values cannot be swapped on an otherwise validly signed callback. For a
+custom list use `Helper::verifyResponseHash($_POST, $secretKey, ['orderId', 'amount', 'responseCode', ...])`.
+Calling `verifyResponseHash($_POST, $secretKey)` without the third argument only checks the hash over
+whatever `hashParams` lists, and is kept for backward compatibility.
 
 ### Complete 3D Purchase (Callback Handler)
 
